@@ -13,14 +13,13 @@ canvas.settings = {
 }
 
 function canvas.createCanvas(size)
-    local cnvs
-    cnvs = love.graphics.newCanvas(size.x, size.y)
+    local cnvs = love.graphics.newCanvas(size.x, size.y)
     canvas.settings.CanvasSize = vector2.new(size.x, size.y)
     return cnvs
 end
 
 function canvas.centerCanvas(cnvs)
-    local prevCanvas = love.graphics.getCanvas() --trust in the process
+    local prevCanvas = love.graphics.getCanvas() --makes sure that the canvas at the end stays the same
     local windowres = vector2.new(love.graphics.getWidth(), love.graphics.getHeight())
 
     love.graphics.setCanvas(cnvs)
@@ -56,7 +55,7 @@ end
 
 function canvas.fillWholeCanvas(cnvs)
 
-    if not type(cnvs) == "userdata" then
+    if not type(cnvs) == "userdata" then --not sure if thats needed
         return
     end
 
@@ -74,7 +73,6 @@ end
 
 function canvas.drawPen(cnvs)
     local r, g, b, a = love.graphics.getColor()
-
     love.graphics.setCanvas(cnvs)
 
     if mouse.m1.State == "Click" then
