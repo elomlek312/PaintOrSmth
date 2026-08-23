@@ -36,11 +36,12 @@ function canvas.setActiveColor(newColor)
     canvas.settings.ActiveColor = newColor
 end
 
-local lastMousePos
+local lastMousePos = vector2.new()
 
 local function mouseMoveCanvas()
     if mouse.m3.State == "Click" then
-        lastMousePos = vector2.new(mouse.Pos.x, mouse.Pos.y)
+        lastMousePos.x = mouse.Pos.x
+        lastMousePos.y = mouse.Pos.y
         goto continue
     end
 
@@ -48,7 +49,8 @@ local function mouseMoveCanvas()
 
     ActiveCanvasOffset = ActiveCanvasOffset:add(moveVec)
 
-    lastMousePos = vector2.new(mouse.Pos.x, mouse.Pos.y)
+    lastMousePos.x = mouse.Pos.x
+    lastMousePos.y = mouse.Pos.y
 
     ::continue::
 end

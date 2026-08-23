@@ -107,11 +107,24 @@ function draw.RectButton(val) --to be changed
     love.graphics.rectangle("fill", val.OffsetPos.x, val.OffsetPos.y, val.OffsetSize.x, val.OffsetSize.y)
 end
 
-function draw.Image(val)
-    love.graphics.setColor(1,1,1,1)
+local imageCache = {}
 
-    love.graphics.draw(love.graphics.newImage(val.Image),
+local function getImage(path)
+    if not imageCache[path] then
+        imageCache[path] = love.graphics.newImage(path)
+    end
+    return imageCache[path]
+end
+
+function draw.Image(val)
+    love.graphics.setColor(1, 1, 1, 1)
+    local img = getImage(val.Image)
+    love.graphics.draw(img,
         val.OffsetPos.x, val.OffsetPos.y, 0, val.ImageScale.x, val.ImageScale.y)
+end
+
+function draw.ImageButton(val)
+
 end
 
 local function loadImages(tbl)
