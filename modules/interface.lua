@@ -5,7 +5,8 @@ local viinfo = "assets/images/TMII.png"
 local vi --veri importatn
 
 local images = {
-    pasteButton = "assets/images/copybuttonimg.png"
+    pasteButton = "assets/images/pasteButtonImg.png",
+    copyButton = "assets/images/copyButtonImg.png"
 }
 
 local mainPaintingInterface = {
@@ -20,7 +21,7 @@ local mainPaintingInterface = {
                 Name = "",
                 Type = "Rect",
                 ScalePos = vector2.new(0.01, 0.05),
-                ScaleSize = vector2.new(0.08, 0.9),
+                ScaleSize = vector2.new(0.04, 0.9),
                 Color = { 0.8, 0.8, 0.8 },
                 Children = {
                     {
@@ -74,12 +75,10 @@ function map.RectButton(val)
 end
 
 function map.Image(val)
-    local width = love.graphics.newImage(val.Image):getWidth()
-    local height = love.graphics.newImage(val.Image):getHeight()
 
     local ImageScale = vector2.new(
-        val.OffsetSize.x / width,
-        val.OffsetSize.y / height
+        val.OffsetSize.x / love.graphics.newImage(val.Image):getWidth(),
+        val.OffsetSize.y / love.graphics.newImage(val.Image):getHeight()
     )
 
     return {
@@ -110,8 +109,9 @@ end
 
 function draw.Image(val)
     love.graphics.setColor(1,1,1,1)
-    local img = love.graphics.newImage(val.Image)
-	love.graphics.draw(img, val.OffsetPos.x, val.OffsetPos.y, 0, val.ImageScale.x, val.ImageScale.y)
+
+    love.graphics.draw(love.graphics.newImage(val.Image),
+        val.OffsetPos.x, val.OffsetPos.y, 0, val.ImageScale.x, val.ImageScale.y)
 end
 
 local function loadImages(tbl)
@@ -206,8 +206,6 @@ function interface.draw()
     end
 
     love.graphics.setColor(r, g, b, a)
-
-    love.graphics.draw(images.pasteButton, 400, 10, 0, 0.5, 0.5)
 end
 
 return interface

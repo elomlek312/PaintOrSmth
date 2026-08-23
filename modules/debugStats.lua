@@ -18,7 +18,7 @@ function debug.draw()
 
         love.graphics.setColor(0, 0, 0, 0.5)
         love.graphics.rectangle("fill", 10, 10, 250, 400)
-        love.graphics.setColor({ 1, 1, 1 })
+        love.graphics.setColor( 1, 1, 1)
 
         love.graphics.print(string.format("Fps: %d Memory: %dKb", fps, mem), 10, 20)
         love.graphics.print(string.format("Res: %dx%d Maximized? : %s", resx, resy, isMaximized), 10, 35)
