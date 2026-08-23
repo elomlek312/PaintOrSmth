@@ -11,32 +11,37 @@ local images = {
 local mainPaintingInterface = {
     {
         Name = "",
+        Type = "Rect",
         ScalePos = vector2.new(0, 0),
         ScaleSize = vector2.new(1, 0.12),
         Color = { 1, 1, 1 },
         Children = {
             { --copy paste region
                 Name = "",
+                Type = "Rect",
                 ScalePos = vector2.new(0.01, 0.05),
                 ScaleSize = vector2.new(0.08, 0.9),
                 Color = { 0.8, 0.8, 0.8 },
                 Children = {
                     {
                         Name = "CopyButton",
+                        Type = "RectButton",
                         ScalePos = vector2.new(0.05, 0.05),
                         ScaleSize = vector2.new(0.9, 0.4),
                         Color = { 1, 0, 0 },
                     },
                     {
                         Name = "PasteButton",
+                        Type = "Image",
                         ScalePos = vector2.new(0.05, 0.55),
                         ScaleSize = vector2.new(0.9, 0.4),
-                        Color = { 0, 0, 1 },
+                        Image = images.pasteButton,
                     }
                 }
             },
             {
                 Name = "",
+                Type = "Rect",
                 ScalePos = vector2.new(0.1, 0.05),
                 ScaleSize = vector2.new(0.2, 0.9),
                 Color = { 0, 1, 0 }
@@ -44,6 +49,70 @@ local mainPaintingInterface = {
         }
     }
 }
+
+--#####################################################
+
+local map = {}
+
+function map.Rect(val)
+    return {
+        Type = val.Type,
+        OffsetPos = val.OffsetPos,
+        OffsetSize = val.OffsetSize,
+        Color = val.Color
+    }
+end
+
+function map.RectButton(val)
+    return {
+        Type = val.Type,
+        OffsetPos = val.OffsetPos,
+        OffsetSize = val.OffsetSize,
+        Color = val.Color,
+        Func = val.Func
+    }
+end
+
+function map.Image(val)
+    local width = love.graphics.newImage(val.Image):getWidth()
+    local height = love.graphics.newImage(val.Image):getHeight()
+
+    local ImageScale = vector2.new(
+        val.OffsetSize.x / width,
+        val.OffsetSize.y / height
+    )
+
+    return {
+        Type = val.Type,
+        OffsetPos = val.OffsetPos,
+        ImageScale = ImageScale,
+        Image = val.Image
+    }
+end
+
+function map.ImageButton(val)
+
+end
+
+--#################################################
+
+local draw = {}
+
+function draw.Rect(val)
+    love.graphics.setColor(val.Color)
+    love.graphics.rectangle("fill", val.OffsetPos.x, val.OffsetPos.y, val.OffsetSize.x, val.OffsetSize.y)
+end
+
+function draw.RectButton(val) --to be changed
+    love.graphics.setColor(val.Color)
+    love.graphics.rectangle("fill", val.OffsetPos.x, val.OffsetPos.y, val.OffsetSize.x, val.OffsetSize.y)
+end
+
+function draw.Image(val)
+    love.graphics.setColor(1,1,1,1)
+    local img = love.graphics.newImage(val.Image)
+	love.graphics.draw(img, val.OffsetPos.x, val.OffsetPos.y, 0, val.ImageScale.x, val.ImageScale.y)
+end
 
 local function loadImages(tbl)
     local info = love.filesystem.getInfo(viinfo)
@@ -98,7 +167,7 @@ local function mapAllDrawables(data, parent)
             surfacepos.y + surfacesize.y * val.ScalePos.y
         )
 
-        local tbl = { val.OffsetPos, val.OffsetSize, val.Color }
+        local tbl = map[val.Type](val)
 
         table.insert(drawCallsTable, tbl)
 
@@ -131,9 +200,9 @@ function interface.draw()
     local r, g, b, a = love.graphics.getColor()
 
     for index, value in ipairs(drawCallsTable) do
-        love.graphics.setColor(value[3])
 
-        love.graphics.rectangle("fill", value[1].x, value[1].y, value[2].x, value[2].y)
+        draw[value.Type](value)
+
     end
 
     love.graphics.setColor(r, g, b, a)
