@@ -45,9 +45,9 @@ local function mouseMoveCanvas()
         goto continue
     end
 
-    local moveVec = mouse.Pos:sub(lastMousePos)
+    -- local moveVec = mouse.Pos:sub(lastMousePos)
 
-    ActiveCanvasOffset = ActiveCanvasOffset:add(moveVec)
+    ActiveCanvasOffset = ActiveCanvasOffset:add(mouse.Pos:sub(lastMousePos))
 
     lastMousePos.x = mouse.Pos.x
     lastMousePos.y = mouse.Pos.y
