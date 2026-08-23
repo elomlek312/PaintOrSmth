@@ -75,10 +75,10 @@ function map.RectButton(val)
 end
 
 function map.Image(val)
-
+    local img = love.graphics.newImage(val.Image)
     local ImageScale = vector2.new(
-        val.OffsetSize.x / love.graphics.newImage(val.Image):getWidth(),
-        val.OffsetSize.y / love.graphics.newImage(val.Image):getHeight()
+        val.OffsetSize.x / img:getWidth(),
+        val.OffsetSize.y / img:getHeight()
     )
 
     return {
