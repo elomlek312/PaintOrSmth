@@ -1,13 +1,9 @@
 local vector2 = require "modules.variables.vector2"
 local tableUtils = require "modules.tableUtils"
+local images     = require "modules.variables.images"
 
 local viinfo = "assets/images/TMII.png"
 local vi --veri importatn
-
-local images = {
-    pasteButton = "assets/images/pasteButtonImg.png",
-    copyButton = "assets/images/copyButtonImg.png"
-}
 
 local mainPaintingInterface = {
     {
@@ -36,7 +32,7 @@ local mainPaintingInterface = {
                         Type = "Image",
                         ScalePos = vector2.new(0.05, 0.55),
                         ScaleSize = vector2.new(0.9, 0.4),
-                        Image = images.pasteButton,
+                        Image = images.Assets.pasteButton,
                     }
                 }
             },
@@ -107,42 +103,15 @@ function draw.RectButton(val) --to be changed
     love.graphics.rectangle("fill", val.OffsetPos.x, val.OffsetPos.y, val.OffsetSize.x, val.OffsetSize.y)
 end
 
-local imageCache = {}
-
-local function getImage(path)
-    if not imageCache[path] then
-        imageCache[path] = love.graphics.newImage(path)
-    end
-    return imageCache[path]
-end
-
 function draw.Image(val)
     love.graphics.setColor(1, 1, 1, 1)
-    local img = getImage(val.Image)
+    local img = images.GetImage(val.Image)
     love.graphics.draw(img,
         val.OffsetPos.x, val.OffsetPos.y, 0, val.ImageScale.x, val.ImageScale.y)
 end
 
 function draw.ImageButton(val)
 
-end
-
-local function loadImages(tbl)
-    local info = love.filesystem.getInfo(viinfo)
-    if not info then
-        love.event.quit(1)
-    end
-
-    vi = love.graphics.newImage(viinfo)
-
-    for key, value in pairs(tbl) do
-        info = love.filesystem.getInfo(value)
-        if info then
-            tbl[key] = love.graphics.newImage(value)
-        else
-            tbl[key] = vi
-        end
-    end
 end
 
 local function getScaleToPixel(surface, scale)
@@ -192,7 +161,6 @@ local function mapAllDrawables(data, parent)
     end
 end
 
-loadImages(images)
 mapAllDrawables(mainPaintingInterface)
 --print(tableUtils.getTableFormattedString(mainPaintingInterface))
 --print(tableUtils.getTableFormattedString(drawCallsTable))
