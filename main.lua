@@ -1,7 +1,6 @@
 local vector2 = require("modules.variables.vector2")
 local canvas = require("modules.canvas")
 local interface = require("modules.interface")
-local extra     = require("modules.extra")
 local debugStats = require("modules.debugStats")
 local mouse      = require("modules.core.mouse")
 local keyboard = require("modules.core.keyboard")
@@ -35,7 +34,9 @@ function love.load()
     buttons.addButton(vector2.new(100, 100), vector2.new(100, 100), nil)
 
     keyboard.bindToActions(">!<lshift>!<f", function ()
+        canvas.setActiveColor({ 1, 1, 1 })
         canvas.fillWholeCanvas(ActiveCanvas)
+        canvas.setActiveColor({ 0, 0, 0 })
     end)
 
     keyboard.bindToActions(">!<f12", function ()
@@ -46,11 +47,6 @@ function love.load()
         collectgarbage("collect")
     end)
 
-    keyboard.bindToActions(">!<f", function()
-        canvas.setActiveColor({ 1, 1, 1 })
-        canvas.fillWholeCanvas(ActiveCanvas)
-        canvas.setActiveColor({ 0, 0, 0 })
-    end)
 end
 
 function love.update()
