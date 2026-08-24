@@ -1,51 +1,10 @@
 local vector2 = require "modules.variables.vector2"
 local tableUtils = require "modules.tableUtils"
 local images     = require "modules.variables.images"
+local interfaceData = require "modules.data.interfaceData"
+local buttons       = require "modules.buttons"
 
-local viinfo = "assets/images/TMII.png"
-local vi --veri importatn
-
-local mainPaintingInterface = {
-    {
-        Name = "",
-        Type = "Rect",
-        ScalePos = vector2.new(0, 0),
-        ScaleSize = vector2.new(1, 0.12),
-        Color = { 1, 1, 1 },
-        Children = {
-            { --copy paste region
-                Name = "",
-                Type = "Rect",
-                ScalePos = vector2.new(0.01, 0.05),
-                ScaleSize = vector2.new(0.04, 0.9),
-                Color = { 0.8, 0.8, 0.8 },
-                Children = {
-                    {
-                        Name = "CopyButton",
-                        Type = "RectButton",
-                        ScalePos = vector2.new(0.05, 0.05),
-                        ScaleSize = vector2.new(0.9, 0.4),
-                        Color = { 1, 0, 0 },
-                    },
-                    {
-                        Name = "PasteButton",
-                        Type = "Image",
-                        ScalePos = vector2.new(0.05, 0.55),
-                        ScaleSize = vector2.new(0.9, 0.4),
-                        Image = images.Assets.pasteButton,
-                    }
-                }
-            },
-            {
-                Name = "",
-                Type = "Rect",
-                ScalePos = vector2.new(0.1, 0.05),
-                ScaleSize = vector2.new(0.2, 0.9),
-                Color = { 0, 1, 0 }
-            }
-        }
-    }
-}
+local activeInterfaces = {}
 
 --#####################################################
 
@@ -61,12 +20,13 @@ function map.Rect(val)
 end
 
 function map.RectButton(val)
+    buttons.addButton(val.OffsetPos, val.OffsetSize, val.Func)
+
     return {
         Type = val.Type,
         OffsetPos = val.OffsetPos,
         OffsetSize = val.OffsetSize,
-        Color = val.Color,
-        Func = val.Func
+        Color = val.Color
     }
 end
 
@@ -86,7 +46,20 @@ function map.Image(val)
 end
 
 function map.ImageButton(val)
+    buttons.addButton(val.OffsetPos, val.OffsetSize, val.Func)
 
+    local img = love.graphics.newImage(val.Image)
+    local ImageScale = vector2.new(
+        val.OffsetSize.x / img:getWidth(),
+        val.OffsetSize.y / img:getHeight()
+    )
+
+    return {
+        Type = val.Type,
+        OffsetPos = val.OffsetPos,
+        ImageScale = ImageScale,
+        Image = val.Image
+    }
 end
 
 --#################################################
@@ -98,7 +71,7 @@ function draw.Rect(val)
     love.graphics.rectangle("fill", val.OffsetPos.x, val.OffsetPos.y, val.OffsetSize.x, val.OffsetSize.y)
 end
 
-function draw.RectButton(val) --to be changed
+function draw.RectButton(val) --to be changed (mabye?)
     love.graphics.setColor(val.Color)
     love.graphics.rectangle("fill", val.OffsetPos.x, val.OffsetPos.y, val.OffsetSize.x, val.OffsetSize.y)
 end
@@ -111,7 +84,10 @@ function draw.Image(val)
 end
 
 function draw.ImageButton(val)
-
+    love.graphics.setColor(1, 1, 1, 1)
+    local img = images.GetImage(val.Image)
+    love.graphics.draw(img,
+        val.OffsetPos.x, val.OffsetPos.y, 0, val.ImageScale.x, val.ImageScale.y)
 end
 
 local function getScaleToPixel(surface, scale)
@@ -137,12 +113,7 @@ local function mapAllDrawables(data, parent)
             surfacepos = vector2.new()
         end
 
-        -- print(love.graphics.getWidth())
-        -- print(surfacepos)
-
-
         val.OffsetSize = getScaleToPixel(surfacesize, val.ScaleSize)
-
 
         val.OffsetPos = vector2.new(
             surfacepos.x + surfacesize.x * val.ScalePos.x,
@@ -161,26 +132,42 @@ local function mapAllDrawables(data, parent)
     end
 end
 
-mapAllDrawables(mainPaintingInterface)
+--mapAllDrawables(interfaceData.Main)
 --print(tableUtils.getTableFormattedString(mainPaintingInterface))
 --print(tableUtils.getTableFormattedString(drawCallsTable))
 
 
 local interface = {}
 
+function interface.addToActiveInterfaces(t, extra) --by default adds it last
+    extra = extra or "last"
+
+    if extra == "first" then
+        table.insert(activeInterfaces, 1, t)
+    elseif extra == "last" then
+        activeInterfaces[#activeInterfaces + 1] = t
+    else
+        warn("UHHH")
+    end
+end
+
+function interface.clearActiveInterfaces()
+    tableUtils.clearTable(activeInterfaces)
+end
+
 function interface.updateActiveInterface()
-    drawCallsTable = {}
-    mapAllDrawables(mainPaintingInterface)
+    tableUtils.clearTable(drawCallsTable)
+    for _, v in ipairs(activeInterfaces) do
+        buttons.clear()
+        mapAllDrawables(v)
+    end
 end
 
-function interface.update()
-
-end
 
 function interface.draw()
     local r, g, b, a = love.graphics.getColor()
 
-    for index, value in ipairs(drawCallsTable) do
+    for _, value in ipairs(drawCallsTable) do
 
         draw[value.Type](value)
 

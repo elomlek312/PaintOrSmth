@@ -6,11 +6,11 @@ local buttons = {}
 
 local activeButtons = {}
 
-function buttons.addButton(pos, size, event)
+function buttons.addButton(pos, size, func)
     local btn = {
         Position = pos,
         Size = size,
-        Event = event
+        Func = func
     }
 
     table.insert(activeButtons, btn)
@@ -27,6 +27,7 @@ function buttons.update()
             value.Position.y < mouse.Pos.y and
             mouse.Pos.y < value.Position.y + value.Size.y then
             print("Button with index " .. tostring(index) .. " pressed!", mouse.Pos.x, mouse.Pos.y)
+            value.Func()
         end
     end
 
@@ -34,7 +35,7 @@ function buttons.update()
 end
 
 function buttons.clear()
-    tableUtils.clearTable(buttons)
+    tableUtils.clearTable(activeButtons)
 end
 
 return buttons

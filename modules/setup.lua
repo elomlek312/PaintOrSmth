@@ -2,6 +2,8 @@ local keyboard = require "modules.core.keyboard"
 local canvas   = require "modules.canvas"
 local debugStats = require "modules.debugStats"
 local vector2    = require "modules.variables.vector2"
+local interface  = require "modules.interface"
+local interfaceData = require "modules.data.interfaceData"
 
 local setup = {}
 
@@ -31,6 +33,11 @@ function setup.begin()
     keyboard.bindToActions(">!<c", function ()
         collectgarbage("collect")
     end)
+
+    --########### INTERFACE
+
+    interface.addToActiveInterfaces(interfaceData.Main)
+    interface.updateActiveInterface()
 end
 
 return setup
