@@ -41,6 +41,16 @@ function love.load()
     keyboard.bindToActions(">!<f12", function ()
         debugStats.switch()
     end)
+
+    keyboard.bindToActions(">!<c", function ()
+        collectgarbage("collect")
+    end)
+
+    keyboard.bindToActions(">!<f", function()
+        canvas.setActiveColor({ 1, 1, 1 })
+        canvas.fillWholeCanvas(ActiveCanvas)
+        canvas.setActiveColor({ 0, 0, 0 })
+    end)
 end
 
 function love.update()
