@@ -68,6 +68,12 @@ function tableUtils.getTableFormattedString(tbl, indent)
     return table.concat(parts)
 end
 
+function tableUtils.clearTable(t)
+	for i = #t, 1, -1 do
+		t[i] = nil
+	end
+end
+
 function tableUtils.copyTable(t)
     local copy = {}
 

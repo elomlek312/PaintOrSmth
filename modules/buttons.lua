@@ -1,5 +1,6 @@
 local vector2 = require "modules.variables.vector2"
 local mouse   = require "modules.core.mouse"
+local tableUtils = require "modules.tableUtils"
 
 local buttons = {}
 
@@ -32,7 +33,8 @@ function buttons.update()
     ::continue::
 end
 
-function buttons.activateButton()
+function buttons.clear()
+    tableUtils.clearTable(buttons)
 end
 
 return buttons

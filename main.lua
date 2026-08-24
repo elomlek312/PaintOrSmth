@@ -5,6 +5,7 @@ local debugStats = require("modules.debugStats")
 local mouse      = require("modules.core.mouse")
 local keyboard = require("modules.core.keyboard")
 local buttons    = require("modules.buttons")
+local setup      = require("modules.setup")
 
 local windows = require("windows")
 
@@ -13,8 +14,6 @@ ActiveCanvas = nil
 ActiveCanvasOffset = vector2.new()
 
 function love.load()
-    --print("loaded")
-
     -- local path = windows.openFileDialog()
 
     -- if path then
@@ -23,29 +22,10 @@ function love.load()
     --     print("Cancelled")
     -- end
 
-    ActiveCanvas = canvas.createCanvas(vector2.new(500, 500))
-    canvas.centerCanvas(ActiveCanvas)
-    --canvas.setActiveColor({ 1, 0, 0 })
-    love.graphics.setBackgroundColor({ 0.7, 0.7, 0.7 })
-    canvas.setActiveColor({ 1, 1, 1 })
-    canvas.fillWholeCanvas(ActiveCanvas)
-    canvas.setActiveColor({ 0, 0, 0 })
+    setup.begin()
 
-    buttons.addButton(vector2.new(100, 100), vector2.new(100, 100), nil)
-
-    keyboard.bindToActions(">!<lshift>!<f", function ()
-        canvas.setActiveColor({ 1, 1, 1 })
-        canvas.fillWholeCanvas(ActiveCanvas)
-        canvas.setActiveColor({ 0, 0, 0 })
-    end)
-
-    keyboard.bindToActions(">!<f12", function ()
-        debugStats.switch()
-    end)
-
-    keyboard.bindToActions(">!<c", function ()
-        collectgarbage("collect")
-    end)
+    setup = nil
+    package.loaded["modules.setup"] = nil
 
 end
 
