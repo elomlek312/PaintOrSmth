@@ -3,6 +3,7 @@ local vector2 = require "modules.variables.vector2"
 local mouse = {}
 
 mouse.Pos = vector2.new()
+mouse.Moving = false
 mouse.m1 = {
     State = "Idle",
     IsDown = false
@@ -38,8 +39,16 @@ function mouse.update()
         end
     end
 
-    mouse.Pos.x = love.mouse.getX()
-    mouse.Pos.y = love.mouse.getY()
+    local newX, newY = love.mouse.getX(), love.mouse.getY()
+
+    if (mouse.Pos.x - newX) == 0 and (mouse.Pos.y - newY) == 0 then
+        mouse.Moving = false
+    else
+        mouse.Moving = true
+    end
+
+    mouse.Pos.x = newX
+    mouse.Pos.y = newY
 end
 
 return mouse

@@ -1,4 +1,5 @@
 local windows = require("windows")
+local canvas  = require("modules.canvas")
 
 local vector2 = require "modules.variables.vector2"
 local images  = require "modules.variables.images"
@@ -28,6 +29,8 @@ iData.Main = {
                         Image = images.Assets.newFileButton,
                         Func = function ()
                             print("newFileButton pressed")
+
+                            canvas.newCanvas()
                         end
                     },
                     {
@@ -38,6 +41,12 @@ iData.Main = {
                         Image = images.Assets.openFileButton,
                         Func = function ()
                             print("openFileButton pressed")
+
+                            local path = windows.openFileDialog()
+
+                            if path then
+                                canvas.openFilePath(path)
+                            end
                         end
                     }
                 }
@@ -72,11 +81,89 @@ iData.Main = {
                 }
             },
             {
-                Name = "",
+                Name = "Painting thingies thingy",
                 Type = "Rect",
-                ScalePos = vector2.new(0.2, 0.05),
-                ScaleSize = vector2.new(0.2, 0.9),
-                Color = { 0, 1, 0 }
+                ScalePos = vector2.new(0.145, 0.05),
+                ScaleSize = vector2.new(0.1, 0.9),
+                Color = { 0.8, 0.8, 0.8 },
+                Children = {
+                    {
+                        Name = "PencilButton",
+                        Type = "ImageButton",
+                        ScalePos = vector2.new(0.02, 0.05),
+                        ScaleSize = vector2.new(0.3, 0.4),
+                        Image = "",
+                        Func = function ()
+                            print("Pencil")
+                        end
+                    },
+                    {
+                        Name = "BrushButton",
+                        Type = "ImageButton",
+                        ScalePos = vector2.new(0.35, 0.05),
+                        ScaleSize = vector2.new(0.3, 0.4),
+                        Image = "",
+                        Func = function ()
+                            print("Brush")
+                        end
+                    },
+                    {
+                        Name = "BrushButton", --TEMPORARY ------------------------------------
+                        Type = "Image",
+                        ScalePos = vector2.new(0.68, 0.05),
+                        ScaleSize = vector2.new(0.3, 0.4),
+                        Image = ""
+                    }
+                }
+            },
+            {
+                Name = "Stats or smth thingy", --shows the brush thickness, current color, and smth else i forgor
+                Type = "Rect",
+                ScalePos = vector2.new(0.255, 0.05),
+                ScaleSize = vector2.new(0.05, 0.9),
+                Color = { 1, 0, 0 },
+                Children = {
+                    {
+                        Name = "Idk what here cuz I didnt add a text drawable",
+                        Type = "Image",
+                        ScalePos = vector2.new(),
+                        ScaleSize = vector2.new(1, 1),
+                        Image = ""
+                    }
+                }
+            },
+            {
+                Name = "Color palette",
+                Type = "Rect",
+                ScalePos = vector2.new(0.315, 0.05),
+                ScaleSize = vector2.new(0.15, 0.9),
+                Color = { 0.8, 0.8, 0.8 },
+                Children = {
+                    {
+                        Name = "Black",
+                        Type = "RectButton",
+                        ScalePos = vector2.new(0.02, 0.05),
+                        ScaleSize = vector2.new(0.15, 0.4),
+                        Color = { 0, 0, 0 },
+                        Func = function ()
+                            canvas.settings.ActiveColor[1] = 0
+                            canvas.settings.ActiveColor[2] = 0
+                            canvas.settings.ActiveColor[3] = 0
+                        end
+                    },
+                    {
+                        Name = "White",
+                        Type = "RectButton",
+                        ScalePos = vector2.new(0.02, 0.5),
+                        ScaleSize = vector2.new(0.15, 0.4),
+                        Color = { 1, 1, 1 },
+                        Func = function ()
+                            canvas.settings.ActiveColor[1] = 1
+                            canvas.settings.ActiveColor[2] = 1
+                            canvas.settings.ActiveColor[3] = 1
+                        end
+                    }
+                }
             }
         }
     }

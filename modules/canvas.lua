@@ -1,5 +1,6 @@
-local vector2 = require("modules.variables.vector2")
-local mouse   = require("modules.core.mouse")
+local vector2    = require("modules.variables.vector2")
+local mouse      = require("modules.core.mouse")
+local tableUtils = require("modules.tableUtils")
 
 
 
@@ -36,6 +37,71 @@ function canvas.setActiveColor(newColor)
     canvas.settings.ActiveColor = newColor
 end
 
+--########################
+
+function canvas.newCanvas()
+    ActiveCanvas = canvas.createCanvas(vector2.new(800, 500))
+    canvas.centerCanvas(ActiveCanvas)
+
+    local prevColors = tableUtils.copyTable(canvas.settings.ActiveColor)
+    canvas.settings.ActiveColor = canvas.settings.CanvasColor
+
+    canvas.fillWholeCanvas(ActiveCanvas)
+
+    canvas.settings.ActiveColor = prevColors
+end
+
+-- function canvas.openFilePath(path)
+--     --local sucess, tempImg = pcall(love.graphics.newImage, path)
+--     local file = love.filesystem.newFileData(
+--         path
+--     )
+
+--     local imageData = love.image.newImageData(file)
+--     local tempImg = love.graphics.newImage(imageData)
+--     if true then
+--         local w, h = tempImg:getWidth(), tempImg:getHeight()
+--         tableUtils.clearTable(ActiveCanvas)
+--         ActiveCanvas = canvas.createCanvas(vector2.new(w, h))
+
+--         love.graphics.setCanvas(ActiveCanvas)
+--         love.graphics.draw(tempImg)
+--         love.graphics.setCanvas()
+--     else
+--         print(tempImg)
+--     end
+-- end
+
+function canvas.openFilePath(path)
+    local file, err = io.open(path, "rb")
+    if not file then
+        return nil, err
+    end
+
+    local bytes = file:read("*a")
+    file:close()
+
+    local fileData = love.filesystem.newFileData(bytes, path)
+    local imageData = love.image.newImageData(fileData)
+
+    local tempImg, erro = love.graphics.newImage(imageData)
+
+    if tempImg then
+        local w, h = tempImg:getWidth(), tempImg:getHeight()
+
+        ActiveCanvas = canvas.createCanvas(vector2.new(w, h))
+        canvas.centerCanvas(ActiveCanvas)
+
+        love.graphics.setCanvas(ActiveCanvas)
+        love.graphics.draw(tempImg)
+        love.graphics.setCanvas()
+    else
+        print("Error: " .. erro)
+    end
+end
+
+--#######################
+
 local lastMousePos = vector2.new()
 
 local function mouseMoveCanvas()
@@ -56,7 +122,6 @@ local function mouseMoveCanvas()
 end
 
 function canvas.fillWholeCanvas(cnvs)
-
     if not type(cnvs) == "userdata" then --not sure if thats needed
         return
     end
@@ -74,20 +139,29 @@ function canvas.fillWholeCanvas(cnvs)
 end
 
 function canvas.drawPen(cnvs)
-    local r, g, b, a = love.graphics.getColor()
-    love.graphics.setCanvas(cnvs)
-
     if mouse.m1.State == "Click" then
         lastMousePos = nil
     end
 
+    if lastMousePos and not mouse.Moving then
+        return
+    end
+
+    local r, g, b, a = love.graphics.getColor()
+    love.graphics.setCanvas(cnvs)
+
+
     love.graphics.setColor(canvas.settings.ActiveColor)
 
-    local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset) --dont touch it its very much calculated
+    --local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset) --dont touch it its very much calculated
 
     if not lastMousePos then
+        local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset)
+
         love.graphics.circle("fill", canvasMousePos.x, canvasMousePos.y, 1)
-    else
+    elseif mouse.Moving then
+        local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset)
+
         local canvasLastMousePos = lastMousePos:sub(ActiveCanvasOffset) --fuck yeah it works!!!
         love.graphics.setLineWidth(1)
         love.graphics.line(canvasMousePos.x, canvasMousePos.y, canvasLastMousePos.x, canvasLastMousePos.y)
