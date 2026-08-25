@@ -162,7 +162,103 @@ iData.Main = {
                             canvas.settings.ActiveColor[2] = 1
                             canvas.settings.ActiveColor[3] = 1
                         end
-                    }
+                    },
+                    {
+                        Name = "Red",
+                        Type = "RectButton",
+                        ScalePos = vector2.new(0.19, 0.05),
+                        ScaleSize = vector2.new(0.15, 0.4),
+                        Color = { 1, 0, 0 },
+                        Func = function ()
+                            canvas.settings.ActiveColor[1] = 1
+                            canvas.settings.ActiveColor[2] = 0
+                            canvas.settings.ActiveColor[3] = 0
+                        end
+                    },
+                    {
+                        Name = "Orange",
+                        Type = "RectButton",
+                        ScalePos = vector2.new(0.19, 0.5),
+                        ScaleSize = vector2.new(0.15, 0.4),
+                        Color = { 1, 0.5, 0 },
+                        Func = function ()
+                            canvas.settings.ActiveColor[1] = 1
+                            canvas.settings.ActiveColor[2] = 0.5
+                            canvas.settings.ActiveColor[3] = 0
+                        end
+                    },
+                    {
+                        Name = "Yellow",
+                        Type = "RectButton",
+                        ScalePos = vector2.new(0.36, 0.05),
+                        ScaleSize = vector2.new(0.15, 0.4),
+                        Color = { 1, 1, 0 },
+                        Func = function ()
+                            canvas.settings.ActiveColor[1] = 1
+                            canvas.settings.ActiveColor[2] = 1
+                            canvas.settings.ActiveColor[3] = 0
+                        end
+                    },
+                    {
+                        Name = "Light green",
+                        Type = "RectButton",
+                        ScalePos = vector2.new(0.36, 0.5),
+                        ScaleSize = vector2.new(0.15, 0.4),
+                        Color = { 0.56, 0.93, 0.56 },
+                        Func = function ()
+                            canvas.settings.ActiveColor[1] = 0.56
+                            canvas.settings.ActiveColor[2] = 0.93
+                            canvas.settings.ActiveColor[3] = 0.56
+                        end
+                    },
+                    {
+                        Name = "Dark green",
+                        Type = "RectButton",
+                        ScalePos = vector2.new(0.53, 0.05),
+                        ScaleSize = vector2.new(0.15, 0.4),
+                        Color = { 0, 0.39, 0 },
+                        Func = function ()
+                            canvas.settings.ActiveColor[1] = 0
+                            canvas.settings.ActiveColor[2] = 0.39
+                            canvas.settings.ActiveColor[3] = 0
+                        end
+                    },
+                    {
+                        Name = "Blue",
+                        Type = "RectButton",
+                        ScalePos = vector2.new(0.53, 0.5),
+                        ScaleSize = vector2.new(0.15, 0.4),
+                        Color = { 0, 0, 1 },
+                        Func = function ()
+                            canvas.settings.ActiveColor[1] = 0
+                            canvas.settings.ActiveColor[2] = 0
+                            canvas.settings.ActiveColor[3] = 1
+                        end
+                    },
+                    {
+                        Name = "Dark purple",
+                        Type = "RectButton",
+                        ScalePos = vector2.new(0.70, 0.05),
+                        ScaleSize = vector2.new(0.15, 0.4),
+                        Color = { 0.29, 0.1, 0.3 },
+                        Func = function ()
+                            canvas.settings.ActiveColor[1] = 0.29
+                            canvas.settings.ActiveColor[2] = 0.1
+                            canvas.settings.ActiveColor[3] = 0.3
+                        end
+                    },
+                    {
+                        Name = "Pink",
+                        Type = "RectButton",
+                        ScalePos = vector2.new(0.70, 0.5),
+                        ScaleSize = vector2.new(0.15, 0.4),
+                        Color = { 1, 0.77, 0.79 },
+                        Func = function ()
+                            canvas.settings.ActiveColor[1] = 1
+                            canvas.settings.ActiveColor[2] = 0.77
+                            canvas.settings.ActiveColor[3] = 0.79
+                        end
+                    },
                 }
             }
         }
