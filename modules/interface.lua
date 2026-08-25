@@ -31,7 +31,7 @@ function map.RectButton(val)
 end
 
 function map.Image(val)
-    local img = love.graphics.newImage(val.Image)
+    local img = images.GetImage(val.Image)
     local ImageScale = vector2.new(
         val.OffsetSize.x / img:getWidth(),
         val.OffsetSize.y / img:getHeight()
@@ -48,7 +48,7 @@ end
 function map.ImageButton(val)
     buttons.addButton(val.OffsetPos, val.OffsetSize, val.Func)
 
-    local img = love.graphics.newImage(val.Image)
+    local img = images.GetImage(val.Image)
     local ImageScale = vector2.new(
         val.OffsetSize.x / img:getWidth(),
         val.OffsetSize.y / img:getHeight()
@@ -98,6 +98,11 @@ local drawCallsTable = {}
 
 local function mapAllDrawables(data, parent)
     for key, val in pairs(data) do
+        -- if val.Name then
+        --     print("mapping "..val.Name)
+        -- else
+        --     print("mapping unnamed")
+        -- end
 
         local surfacesize
         local surfacepos

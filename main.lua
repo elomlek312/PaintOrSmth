@@ -26,7 +26,6 @@ function love.load()
 
     setup = nil
     package.loaded["modules.setup"] = nil
-
 end
 
 function love.update()

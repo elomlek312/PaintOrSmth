@@ -3,9 +3,6 @@ local tableUtils = require "modules.tableUtils"
 local Actions = {
     [">!<escape"] = function()
         love.event.quit()
-    end,
-    [">!<lctrl>!<f"] = function ()
-        print("HOLY SHIT IT WORKS")
     end
 }
 

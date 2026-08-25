@@ -1,15 +1,26 @@
 local images = {}
 
+local imageCache = {}
+
+local nilAsset = "assets/images/TMII.png"
+imageCache[nilAsset] = love.graphics.newImage(nilAsset)
+
+
 images.Assets = {
-    pasteButton = "assets/images/pasteButtonImg.png",
-    copyButton = "assets/images/copyButtonImg.png"
+    pasteButton = "assets/images/pasteButton.png",
+    copyButton = "assets/images/copyButton.png",
+    newFileButton = "assets/images/newFileButton.png",
+    openFileButton = "assets/images/openFileButton.png"
 }
 
-local imageCache = {}
 
 function images.GetImage(path)
     if not imageCache[path] then
-        imageCache[path] = love.graphics.newImage(path)
+        local sucess, out = pcall(love.graphics.newImage, path)
+        if not sucess then
+            return imageCache[nilAsset]
+        end
+        imageCache[path] = out
     end
     return imageCache[path]
 end
