@@ -94,7 +94,7 @@ iData.Main = {
                         ScaleSize = vector2.new(0.3, 0.4),
                         Image = "",
                         Func = function ()
-                            print("Pencil")
+                            canvas.settings.DrawMode = "Pencil"
                         end
                     },
                     {
@@ -104,7 +104,7 @@ iData.Main = {
                         ScaleSize = vector2.new(0.3, 0.4),
                         Image = "",
                         Func = function ()
-                            print("Brush")
+                            canvas.settings.DrawMode = "Brush"
                         end
                     },
                     {

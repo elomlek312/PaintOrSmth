@@ -7,6 +7,7 @@ local tableUtils = require("modules.tableUtils")
 local canvas = {}
 
 canvas.settings = {
+    DrawMode = "Pencil",
     CanvasSize = vector2.new(),
     CanvasColor = { 1, 1, 1 },
     Size = 10,
@@ -138,7 +139,9 @@ function canvas.fillWholeCanvas(cnvs)
     love.graphics.setCanvas()
 end
 
-function canvas.drawPen(cnvs)
+local draw = {}
+
+function draw.Pencil(cnvs)
     if mouse.m1.State == "Click" then
         lastMousePos = nil
     end
@@ -173,9 +176,44 @@ function canvas.drawPen(cnvs)
     love.graphics.setColor(r, g, b, a)
 end
 
+function draw.Brush(cnvs)
+    if mouse.m1.State == "Click" then
+        lastMousePos = nil
+    end
+
+    if lastMousePos and not mouse.Moving then
+        return
+    end
+
+    local r, g, b, a = love.graphics.getColor()
+    love.graphics.setCanvas(cnvs)
+
+
+    love.graphics.setColor(canvas.settings.ActiveColor)
+
+    --local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset) --dont touch it its very much calculated
+
+    if not lastMousePos then
+        local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset)
+
+        love.graphics.circle("fill", canvasMousePos.x, canvasMousePos.y, canvas.settings.Size * 0.5)
+    elseif mouse.Moving then
+        local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset)
+
+        local canvasLastMousePos = lastMousePos:sub(ActiveCanvasOffset) --fuck yeah it works!!!
+        love.graphics.setLineWidth(canvas.settings.Size)
+        love.graphics.line(canvasMousePos.x, canvasMousePos.y, canvasLastMousePos.x, canvasLastMousePos.y)
+    end
+
+    lastMousePos = vector2.new(mouse.Pos.x, mouse.Pos.y)
+
+    love.graphics.setCanvas()
+    love.graphics.setColor(r, g, b, a)
+end
+
 function canvas.update()
     if mouse.m1.IsDown then
-        canvas.drawPen(ActiveCanvas)
+        draw[canvas.settings.DrawMode](ActiveCanvas)
     end
 
     if mouse.m2.IsDown then

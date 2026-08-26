@@ -38,3 +38,7 @@ function love.resize(w, h)
     print(string.format("resize to: %i, %i", w, h))
     interface.updateActiveInterface()
 end
+
+function love.wheelmoved(x, y)
+    canvas.settings.Size = canvas.settings.Size + y
+end
