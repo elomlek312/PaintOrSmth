@@ -7,7 +7,7 @@ local tableUtils = require("modules.tableUtils")
 local canvas = {}
 
 canvas.settings = {
-    Zoom = 2,
+    Zoom = 1,
     DrawMode = "Pencil",
     CanvasSize = vector2.new(),
     CanvasColor = { 1, 1, 1 },
@@ -23,7 +23,7 @@ end
 
 function canvas.centerCanvas(cnvs)
     local prevCanvas = love.graphics.getCanvas() --makes sure that the canvas at the end stays the same
-    local windowres = vector2.new(love.graphics.getWidth(), love.graphics.getHeight())
+    local windowres = vector2.new(love.graphics.getWidth(), love.graphics.getHeight()) --to optimize
 
     love.graphics.setCanvas(cnvs)
     local w, h = love.graphics.getCanvas():getDimensions()
@@ -48,6 +48,7 @@ function canvas.newCanvas()
     end
 
     ActiveCanvas = canvas.createCanvas(vector2.new(800, 500))
+    canvas.settings.Zoom = 1
     canvas.centerCanvas(ActiveCanvas)
 
     local prevColors = tableUtils.copyTable(canvas.settings.ActiveColor)
@@ -110,6 +111,7 @@ function canvas.openFilePath(path)
     end
 
     ActiveCanvas = canvas.createCanvas(vector2.new(w, h))
+    canvas.settings.Zoom = 1
     canvas.centerCanvas(ActiveCanvas)
 
     love.graphics.setCanvas(ActiveCanvas)
