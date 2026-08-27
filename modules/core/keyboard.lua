@@ -28,7 +28,7 @@ function love.keypressed(key)
         keyString = keyString .. ">!<" .. v
     end
 
-    print(tableUtils.getTableString(pressedkeys),keyString)
+    --print(tableUtils.getTableString(pressedkeys),keyString)
 
     if Actions[keyString] then
         Actions[keyString]()
@@ -36,7 +36,7 @@ function love.keypressed(key)
 end
 
 function love.keyreleased(key)
-    print("release",key)
+    --print("release",key)
     for i, v in ipairs(pressedkeys) do
         if v == key then
             table.remove(pressedkeys, i)

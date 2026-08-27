@@ -108,9 +108,30 @@ iData.Main = {
                         end
                     },
                     {
-                        Name = "BrushButton", --TEMPORARY ------------------------------------
+                        Name = "idk1", --TEMPORARY ------------------------------------
                         Type = "Image",
                         ScalePos = vector2.new(0.68, 0.05),
+                        ScaleSize = vector2.new(0.3, 0.4),
+                        Image = ""
+                    },
+                    {
+                        Name = "idk2",
+                        Type = "Image",
+                        ScalePos = vector2.new(0.02, 0.5),
+                        ScaleSize = vector2.new(0.3, 0.4),
+                        Image = ""
+                    },
+                    {
+                        Name = "idk3",
+                        Type = "Image",
+                        ScalePos = vector2.new(0.35, 0.5),
+                        ScaleSize = vector2.new(0.3, 0.4),
+                        Image = ""
+                    },
+                    {
+                        Name = "idk4",
+                        Type = "Image",
+                        ScalePos = vector2.new(0.68, 0.5),
                         ScaleSize = vector2.new(0.3, 0.4),
                         Image = ""
                     }

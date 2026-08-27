@@ -26,7 +26,7 @@ function buttons.update()
             mouse.Pos.x < value.Position.x + value.Size.x and
             value.Position.y < mouse.Pos.y and
             mouse.Pos.y < value.Position.y + value.Size.y then
-            print("Button with index " .. tostring(index) .. " pressed!", mouse.Pos.x, mouse.Pos.y)
+            --print("Button with index " .. tostring(index) .. " pressed!", mouse.Pos.x, mouse.Pos.y)
             value.Func()
         end
     end

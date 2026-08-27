@@ -17,20 +17,24 @@ canvas.settings = {
 
 function canvas.createCanvas(size)
     local cnvs = love.graphics.newCanvas(size.x, size.y)
-    canvas.settings.CanvasSize = vector2.new(size.x, size.y)
+
+    canvas.settings.CanvasSize.x = size.x
+    canvas.settings.CanvasSize.y = size.y
+
     return cnvs
 end
 
 function canvas.centerCanvas(cnvs)
     local prevCanvas = love.graphics.getCanvas() --makes sure that the canvas at the end stays the same
-    local windowres = vector2.new(love.graphics.getWidth(), love.graphics.getHeight()) --to optimize
+
+    local windowResX = love.graphics.getWidth()
+    local windowresY = love.graphics.getHeight()
 
     love.graphics.setCanvas(cnvs)
-    local w, h = love.graphics.getCanvas():getDimensions()
-    local cnvsSize = vector2.new(w, h)
-    local cnvsMiddle = cnvsSize:mul(0.5)
+    local cnvsSizeX, cnvsSizeY = love.graphics.getCanvas():getDimensions()
 
-    ActiveCanvasOffset = windowres:mul(0.5):sub(cnvsMiddle) --see it works!
+    ActiveCanvasOffset.x = (windowResX - cnvsSizeX) * 0.5
+    ActiveCanvasOffset.y = (windowresY - cnvsSizeY) * 0.5
 
     love.graphics.setCanvas(prevCanvas)
 end
@@ -39,7 +43,7 @@ function canvas.setActiveColor(newColor)
     canvas.settings.ActiveColor = newColor
 end
 
---########################
+
 
 function canvas.newCanvas()
     if ActiveCanvas then
@@ -63,27 +67,8 @@ end
 function canvas.getSetting(setting)
     return canvas.settings[setting]
 end
--- function canvas.openFilePath(path)
---     --local sucess, tempImg = pcall(love.graphics.newImage, path)
---     local file = love.filesystem.newFileData(
---         path
---     )
 
---     local imageData = love.image.newImageData(file)
---     local tempImg = love.graphics.newImage(imageData)
---     if true then
---         local w, h = tempImg:getWidth(), tempImg:getHeight()
---         tableUtils.clearTable(ActiveCanvas)
---         ActiveCanvas = canvas.createCanvas(vector2.new(w, h))
-
---         love.graphics.setCanvas(ActiveCanvas)
---         love.graphics.draw(tempImg)
---         love.graphics.setCanvas()
---     else
---         print(tempImg)
---     end
--- end
-
+--########################
 
 function canvas.openFilePath(path)
     local file, err = io.open(path, "rb")
@@ -122,7 +107,6 @@ function canvas.openFilePath(path)
     imageData:release()
     fileData:release()
 end
-
 
 --#######################
 
@@ -197,7 +181,12 @@ function draw.Pencil(cnvs)
         love.graphics.line(canvasMouseX, canvasMouseY, canvasLastMouseX / canvas.settings.Zoom, canvasLastMouseY / canvas.settings.Zoom)
     end
 
-    lastMousePos = vector2.new(mouse.Pos.x, mouse.Pos.y)
+    if lastMousePos then
+        lastMousePos.x = mouse.Pos.x
+        lastMousePos.y = mouse.Pos.y
+    else
+        lastMousePos = vector2.new(mouse.Pos.x, mouse.Pos.y)
+    end
 
     love.graphics.setCanvas()
     love.graphics.setColor(r, g, b, a)
@@ -234,7 +223,12 @@ function draw.Brush(cnvs)
         love.graphics.line(canvasMouseX, canvasMouseY, canvasLastMouseX / canvas.settings.Zoom, canvasLastMouseY / canvas.settings.Zoom)
     end
 
-    lastMousePos = vector2.new(mouse.Pos.x, mouse.Pos.y)
+    if lastMousePos then
+        lastMousePos.x = mouse.Pos.x
+        lastMousePos.y = mouse.Pos.y
+    else
+        lastMousePos = vector2.new(mouse.Pos.x, mouse.Pos.y)
+    end
 
     love.graphics.setCanvas()
     love.graphics.setColor(r, g, b, a)
