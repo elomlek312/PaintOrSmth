@@ -1,6 +1,8 @@
 local mouse = require "modules.core.mouse"
 local debug = {}
 
+local defFont = love.graphics.newFont(12)
+
 debug.drawStats = false
 
 function debug.switch()
@@ -16,6 +18,7 @@ function debug.draw()
         local resx, resy = love.graphics.getWidth(), love.graphics.getHeight()
         local isMaximized = love.window.isMaximized()
 
+        love.graphics.setFont(defFont)
         love.graphics.setColor(0, 0, 0, 0.5)
         love.graphics.rectangle("fill", 10, 10, 250, 400)
         love.graphics.setColor( 1, 1, 1)

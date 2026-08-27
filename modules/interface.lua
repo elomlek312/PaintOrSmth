@@ -3,6 +3,7 @@ local tableUtils = require "modules.tableUtils"
 local images     = require "modules.variables.images"
 local interfaceData = require "modules.data.interfaceData"
 local buttons       = require "modules.buttons"
+local fonts         = require "modules.variables.fonts"
 
 local activeInterfaces = {}
 
@@ -62,6 +63,27 @@ function map.ImageButton(val)
     }
 end
 
+function map.Text(val)
+    return {
+        Type = val.Type,
+        OffsetPos = val.OffsetPos,
+        Text = val.Text,
+        TextSize = val.OffsetSize.y,
+        Color = val.Color
+    }
+end
+
+function map.DynamicText(val)
+    return {
+        Type = val.Type,
+        OffsetPos = val.OffsetPos,
+        TextFunc = val.TextFunc,
+        TextSize = val.OffsetSize.y,
+        Color = val.Color
+    }
+
+end
+
 --#################################################
 
 local draw = {}
@@ -88,6 +110,20 @@ function draw.ImageButton(val)
     local img = images.GetImage(val.Image)
     love.graphics.draw(img,
         val.OffsetPos.x, val.OffsetPos.y, 0, val.ImageScale.x, val.ImageScale.y)
+end
+
+function draw.Text(val)
+    love.graphics.setColor(val.Color)
+    local font = fonts.getFont(val.TextSize)
+    love.graphics.setFont(font)
+    love.graphics.print(val.Text, val.OffsetPos.x, val.OffsetPos.y)
+end
+
+function draw.DynamicText(val) --to jest zrobione tak chujowo ale działa
+    love.graphics.setColor(val.Color)
+    local font = fonts.getFont(val.TextSize)
+    love.graphics.setFont(font)
+    love.graphics.print(val.TextFunc(), val.OffsetPos.x, val.OffsetPos.y)
 end
 
 local function getScaleToPixel(surface, scale)

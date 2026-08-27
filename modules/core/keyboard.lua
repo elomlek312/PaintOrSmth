@@ -49,6 +49,15 @@ function love.keyreleased(key)
     ::skip1::
 end
 
+function keyboard.keydown(key)
+    for _, v in ipairs(pressedkeys) do
+        if v == key then
+            return true
+        end
+    end
+    return false
+end
+
 function keyboard.bindToActions(key, func)
     Actions[key] = func
 end

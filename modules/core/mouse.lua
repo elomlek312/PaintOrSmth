@@ -17,9 +17,15 @@ mouse.m3 = {
     IsDown = false
 }
 
+local mouseButtons = {
+    mouse.m1,
+    mouse.m2,
+    mouse.m3
+}
+
 function mouse.update()
     for i = 1, 3 do                         --update mouse clicks
-        local m = mouse["m" .. tostring(i)] --current mouse button
+        local m = mouseButtons[i] --current mouse button
         local down = love.mouse.isDown(i)   -- bool
 
         m.IsDown = down

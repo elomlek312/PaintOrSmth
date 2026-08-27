@@ -27,7 +27,7 @@ function love.update()
 end
 
 function love.draw()
-    love.graphics.draw(ActiveCanvas, ActiveCanvasOffset.x, ActiveCanvasOffset.y)
+    love.graphics.draw(ActiveCanvas, ActiveCanvasOffset.x, ActiveCanvasOffset.y, 0, canvas.settings.Zoom, canvas.settings.Zoom)
     interface.draw()
     debugStats.draw()
     --love.graphics.print("Memory: " .. tostring(collectgarbage("count")), 10, 30)
@@ -40,5 +40,9 @@ function love.resize(w, h)
 end
 
 function love.wheelmoved(x, y)
-    canvas.settings.Size = canvas.settings.Size + y
+    if keyboard.keydown("lshift") then
+        canvas.settings.Size = math.min(math.max(canvas.settings.Size + y, 1), 25)
+    else
+        canvas.settings.Zoom = canvas.settings.Zoom + y * 0.1
+    end
 end

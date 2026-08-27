@@ -7,6 +7,7 @@ local tableUtils = require("modules.tableUtils")
 local canvas = {}
 
 canvas.settings = {
+    Zoom = 2,
     DrawMode = "Pencil",
     CanvasSize = vector2.new(),
     CanvasColor = { 1, 1, 1 },
@@ -41,6 +42,11 @@ end
 --########################
 
 function canvas.newCanvas()
+    if ActiveCanvas then
+        ActiveCanvas:release()
+        ActiveCanvas = nil
+    end
+
     ActiveCanvas = canvas.createCanvas(vector2.new(800, 500))
     canvas.centerCanvas(ActiveCanvas)
 
@@ -52,6 +58,10 @@ function canvas.newCanvas()
     canvas.settings.ActiveColor = prevColors
 end
 
+
+function canvas.getSetting(setting)
+    return canvas.settings[setting]
+end
 -- function canvas.openFilePath(path)
 --     --local sucess, tempImg = pcall(love.graphics.newImage, path)
 --     local file = love.filesystem.newFileData(
@@ -73,6 +83,7 @@ end
 --     end
 -- end
 
+
 function canvas.openFilePath(path)
     local file, err = io.open(path, "rb")
     if not file then
@@ -84,22 +95,32 @@ function canvas.openFilePath(path)
 
     local fileData = love.filesystem.newFileData(bytes, path)
     local imageData = love.image.newImageData(fileData)
-
     local tempImg, erro = love.graphics.newImage(imageData)
 
-    if tempImg then
-        local w, h = tempImg:getWidth(), tempImg:getHeight()
-
-        ActiveCanvas = canvas.createCanvas(vector2.new(w, h))
-        canvas.centerCanvas(ActiveCanvas)
-
-        love.graphics.setCanvas(ActiveCanvas)
-        love.graphics.draw(tempImg)
-        love.graphics.setCanvas()
-    else
+    if not tempImg then
         print("Error: " .. erro)
+        return
     end
+
+    local w, h = tempImg:getWidth(), tempImg:getHeight()
+
+    if ActiveCanvas then
+        ActiveCanvas:release()
+        ActiveCanvas = nil
+    end
+
+    ActiveCanvas = canvas.createCanvas(vector2.new(w, h))
+    canvas.centerCanvas(ActiveCanvas)
+
+    love.graphics.setCanvas(ActiveCanvas)
+    love.graphics.draw(tempImg)
+    love.graphics.setCanvas()
+
+    tempImg:release() --clear up
+    imageData:release()
+    fileData:release()
 end
+
 
 --#######################
 
@@ -114,7 +135,9 @@ local function mouseMoveCanvas()
 
     -- local moveVec = mouse.Pos:sub(lastMousePos)
 
-    ActiveCanvasOffset = ActiveCanvasOffset:add(mouse.Pos:sub(lastMousePos))
+    -- ActiveCanvasOffset = ActiveCanvasOffset:add(mouse.Pos:sub(lastMousePos)) --to rewrite
+    ActiveCanvasOffset.x = ActiveCanvasOffset.x + mouse.Pos.x - lastMousePos.x
+    ActiveCanvasOffset.y = ActiveCanvasOffset.y + mouse.Pos.y - lastMousePos.y
 
     lastMousePos.x = mouse.Pos.x
     lastMousePos.y = mouse.Pos.y
@@ -156,18 +179,20 @@ function draw.Pencil(cnvs)
 
     love.graphics.setColor(canvas.settings.ActiveColor)
 
-    --local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset) --dont touch it its very much calculated
+    if not lastMousePos then --it works right?
+        local canvasMouseX = (mouse.Pos.x - ActiveCanvasOffset.x) / canvas.settings.Zoom
+        local canvasMouseY = (mouse.Pos.y - ActiveCanvasOffset.y) / canvas.settings.Zoom
 
-    if not lastMousePos then
-        local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset)
-
-        love.graphics.circle("fill", canvasMousePos.x, canvasMousePos.y, 1)
+        love.graphics.circle("fill", canvasMouseX, canvasMouseY, 1)
     elseif mouse.Moving then
-        local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset)
+        local canvasMouseX = (mouse.Pos.x - ActiveCanvasOffset.x) / canvas.settings.Zoom
+        local canvasMouseY = (mouse.Pos.y - ActiveCanvasOffset.y) / canvas.settings.Zoom
 
-        local canvasLastMousePos = lastMousePos:sub(ActiveCanvasOffset) --fuck yeah it works!!!
+        local canvasLastMouseX = (lastMousePos.x - ActiveCanvasOffset.x)
+        local canvasLastMouseY = (lastMousePos.y - ActiveCanvasOffset.y)
+
         love.graphics.setLineWidth(1)
-        love.graphics.line(canvasMousePos.x, canvasMousePos.y, canvasLastMousePos.x, canvasLastMousePos.y)
+        love.graphics.line(canvasMouseX, canvasMouseY, canvasLastMouseX / canvas.settings.Zoom, canvasLastMouseY / canvas.settings.Zoom)
     end
 
     lastMousePos = vector2.new(mouse.Pos.x, mouse.Pos.y)
@@ -191,18 +216,20 @@ function draw.Brush(cnvs)
 
     love.graphics.setColor(canvas.settings.ActiveColor)
 
-    --local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset) --dont touch it its very much calculated
+    if not lastMousePos then --i think its fine now?
+        local canvasMouseX = (mouse.Pos.x - ActiveCanvasOffset.x) / canvas.settings.Zoom
+        local canvasMouseY = (mouse.Pos.y - ActiveCanvasOffset.y) / canvas.settings.Zoom
 
-    if not lastMousePos then
-        local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset)
-
-        love.graphics.circle("fill", canvasMousePos.x, canvasMousePos.y, canvas.settings.Size * 0.5)
+        love.graphics.circle("fill", canvasMouseX, canvasMouseY, canvas.settings.Size * 0.5)
     elseif mouse.Moving then
-        local canvasMousePos = mouse.Pos:sub(ActiveCanvasOffset)
+        local canvasMouseX = (mouse.Pos.x - ActiveCanvasOffset.x) / canvas.settings.Zoom
+        local canvasMouseY = (mouse.Pos.y - ActiveCanvasOffset.y) / canvas.settings.Zoom
 
-        local canvasLastMousePos = lastMousePos:sub(ActiveCanvasOffset) --fuck yeah it works!!!
+        local canvasLastMouseX = (lastMousePos.x - ActiveCanvasOffset.x)
+        local canvasLastMouseY = (lastMousePos.y - ActiveCanvasOffset.y)
+
         love.graphics.setLineWidth(canvas.settings.Size)
-        love.graphics.line(canvasMousePos.x, canvasMousePos.y, canvasLastMousePos.x, canvasLastMousePos.y)
+        love.graphics.line(canvasMouseX, canvasMouseY, canvasLastMouseX / canvas.settings.Zoom, canvasLastMouseY / canvas.settings.Zoom)
     end
 
     lastMousePos = vector2.new(mouse.Pos.x, mouse.Pos.y)

@@ -10,7 +10,9 @@ images.Assets = {
     pasteButton = "assets/images/pasteButton.png",
     copyButton = "assets/images/copyButton.png",
     newFileButton = "assets/images/newFileButton.png",
-    openFileButton = "assets/images/openFileButton.png"
+    openFileButton = "assets/images/openFileButton.png",
+    pencilButton = "assets/images/pencilButton.png",
+    brushButton = "assets/images/brushButton.png"
 }
 
 
