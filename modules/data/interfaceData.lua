@@ -1,10 +1,64 @@
 local windows = require("windows")
 local canvas  = require("modules.canvas")
+local interface = require("modules.interface")
 
 local vector2 = require "modules.variables.vector2"
 local images  = require "modules.variables.images"
 
 local iData   = {}
+
+iData.newFileWindow = {
+    {
+        Name = "Main Window",
+        Type = "Rect",
+        ScalePos = vector2.new(0.3, 0.3),
+        ScaleSize = vector2.new(0.4, 0.4),
+        Color = { 0.6, 0.6, 0.6 },
+        Children = {
+            {
+                Name = "Main text",
+                Type = "Text",
+                ScalePos = vector2.new(0.1, 0.15),
+                ScaleSize = vector2.new(0, 0.1),
+                Color = { 0, 0, 0 },
+                Text = "Select resolution",
+            },
+            {
+                Name = "ResButton",
+                Type = "RectButton",
+                ScalePos = vector2.new(0.3, 0.3),
+                ScaleSize = vector2.new(0.4, 0.3),
+                Color = { 0.9, 0.9, 0.9 },
+                Func = function()
+                    canvas.newCanvas(800, 500)
+                    interface.removeFromActiveInterfaces("newFileWindow")
+                    interface.updateActiveInterface()
+                end,
+                Children = {
+                    {
+                        Name = "ResText",
+                        Type = "Text",
+                        ScalePos = vector2.new(0.05, 0.3),
+                        ScaleSize = vector2.new(0, 0.4),
+                        Text = "800X500",
+                        Color = { 0, 0, 0 },
+                    }
+                }
+            },
+            {
+                Name = "X button",
+                Type = "RectButton",
+                ScalePos = vector2.new(1, -0.15),
+                ScaleSize = vector2.new(0.12, 0.15),
+                Color = { 1, 0, 0 },
+                Func = function ()
+                    interface.removeFromActiveInterfaces("newFileWindow")
+                    interface.updateActiveInterface()
+                end
+            }
+        }
+    }
+}
 
 iData.Main = {
     {
@@ -27,10 +81,9 @@ iData.Main = {
                         ScalePos = vector2.new(0.02, 0.05),
                         ScaleSize = vector2.new(0.4, 0.4),
                         Image = images.Assets.newFileButton,
-                        Func = function ()
-                            print("newFileButton pressed")
-
-                            canvas.newCanvas()
+                        Func = function()
+                            interface.addToActiveInterfaces("newFileWindow", iData.newFileWindow)
+                            interface.updateActiveInterface()
                         end
                     },
                     {
@@ -163,6 +216,15 @@ iData.Main = {
                             return ("Size: "..canvas.getSetting("Size"))
                         end,
                         Color = { 0, 0, 0 },
+                    },
+                    {
+                        Name = "Current color thingy",
+                        Type = "DynamicRect",
+                        ScalePos = vector2.new(0.05, 0.6),
+                        ScaleSize = vector2.new(0.9, 0.3),
+                        ColorFunc = function ()
+                            return canvas.getSetting("ActiveColor")
+                        end
                     }
                 }
             },
@@ -294,6 +356,13 @@ iData.Main = {
                         end
                     },
                 }
+            },
+            {
+                Name = "TempStats",
+                Type = "Rect",
+                ScalePos = vector2.new(0.525, 0.05),
+                ScaleSize = vector2.new(0.12, 0.9),
+                Color = { 0.8, 0.8, 0.8 },
             }
         }
     }

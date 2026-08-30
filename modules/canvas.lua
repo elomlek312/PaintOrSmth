@@ -45,13 +45,13 @@ end
 
 
 
-function canvas.newCanvas()
+function canvas.newCanvas(xSize, ySize)
     if ActiveCanvas then
         ActiveCanvas:release()
         ActiveCanvas = nil
     end
 
-    ActiveCanvas = canvas.createCanvas(vector2.new(800, 500))
+    ActiveCanvas = canvas.createCanvas(vector2.new(xSize, ySize))
     canvas.settings.Zoom = 1
     canvas.centerCanvas(ActiveCanvas)
 

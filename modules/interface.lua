@@ -1,11 +1,10 @@
 local vector2 = require "modules.variables.vector2"
 local tableUtils = require "modules.tableUtils"
 local images     = require "modules.variables.images"
-local interfaceData = require "modules.data.interfaceData"
 local buttons       = require "modules.buttons"
 local fonts         = require "modules.variables.fonts"
 
-local activeInterfaces = {}
+
 
 --#####################################################
 
@@ -81,7 +80,15 @@ function map.DynamicText(val)
         TextSize = val.OffsetSize.y,
         Color = val.Color
     }
+end
 
+function map.DynamicRect(val)
+    return {
+        Type = val.Type,
+        OffsetPos = val.OffsetPos,
+        OffsetSize = val.OffsetSize,
+        ColorFunc = val.ColorFunc
+    }
 end
 
 --#################################################
@@ -124,6 +131,11 @@ function draw.DynamicText(val) --to jest zrobione tak chujowo ale działa
     local font = fonts.getFont(val.TextSize)
     love.graphics.setFont(font)
     love.graphics.print(val.TextFunc(), val.OffsetPos.x, val.OffsetPos.y)
+end
+
+function draw.DynamicRect(val)
+    love.graphics.setColor(val.ColorFunc())
+    love.graphics.rectangle("fill", val.OffsetPos.x, val.OffsetPos.y, val.OffsetSize.x, val.OffsetSize.y)
 end
 
 local function getScaleToPixel(surface, scale)
@@ -173,23 +185,40 @@ local function mapAllDrawables(data, parent)
     end
 end
 
---mapAllDrawables(interfaceData.Main)
---print(tableUtils.getTableFormattedString(mainPaintingInterface))
---print(tableUtils.getTableFormattedString(drawCallsTable))
-
 
 local interface = {}
 
-function interface.addToActiveInterfaces(t, extra) --by default adds it last
+local activeInterfaces = {}
+local activeInterfacesNames = {} --to name these interfaces and still keep interfaces indexed
+
+function interface.addToActiveInterfaces(name, t, extra) --by default adds it last
     extra = extra or "last"
 
     if extra == "first" then
         table.insert(activeInterfaces, 1, t)
+        table.insert(activeInterfacesNames, 1, name)
     elseif extra == "last" then
         activeInterfaces[#activeInterfaces + 1] = t
+        activeInterfacesNames[#activeInterfacesNames+1] = name
     else
         warn("UHHH")
     end
+end
+
+function interface.removeFromActiveInterfaces(name)
+    local index = -1
+    for i, v in ipairs(activeInterfacesNames) do
+        if v == name then
+            index = i
+        end
+    end
+
+    if index == -1 then
+        return
+    end
+
+    table.remove(activeInterfaces, index)
+    table.remove(activeInterfacesNames, index)
 end
 
 function interface.clearActiveInterfaces()

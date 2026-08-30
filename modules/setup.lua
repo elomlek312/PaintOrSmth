@@ -34,9 +34,14 @@ function setup.begin()
         collectgarbage("collect")
     end)
 
+    keyboard.bindToActions(">!<a", function ()
+        interface.addToActiveInterfaces("newFileWindow" ,interfaceData.newFileWindow, "last")
+        interface.updateActiveInterface()
+    end)
+
     --########### INTERFACE
 
-    interface.addToActiveInterfaces(interfaceData.Main)
+    interface.addToActiveInterfaces("Main", interfaceData.Main)
     interface.updateActiveInterface()
 end
 
